@@ -1,11 +1,3 @@
-class Project {
-  constructor(name, description) {
-    this.name = name;
-    this.description = description;
-    this.todos = [];
-  }
-}
-
 class Todo {
   constructor(
     title,
@@ -28,157 +20,208 @@ class Todo {
   }
 }
 
+class Project {
+  constructor(name, description) {
+    this.name = name;
+    this.description = description;
+    this.todos = [];
+  }
+
+  addTodo(todo) {
+    this.todos.push(todo);
+  }
+}
+
 const SIDEBAR = document.querySelector(".projects-container");
 const ADD_PROJECT_BTN = document.querySelector(".add-project");
+const ADD_TODO_BTN = document.querySelector(".add-todo");
 const TODOS = document.querySelector(".todo-container");
-const projects = [];
 
-ADD_PROJECT_BTN.addEventListener("click", renderProjectForm);
+class ProjectManager {
+  constructor() {
+    this.projects = [];
+    this.currentProjectIndex = null;
+  }
 
-function renderProjectForm() {
-  SIDEBAR.innerHTML = `
+  renderProjectForm() {
+    SIDEBAR.innerHTML = `
       <div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
-        <h2 class="text-2xl font-bold mb-4">Create a New Project</h2>
-        <form id="project-form">
-          <div class="mb-4">
-            <label for="project-name" class="block text-sm font-medium text-gray-700">Project Name:</label>
-            <input type="text" id="project-name" required class="mt-1 p-2 rounded border w-full">
-          </div>
-          <div class="mb-4">
-            <label for="project-description" class="block text-sm font-medium text-gray-700">Description:</label>
-            <textarea id="project-description" required class="mt-1 p-2 rounded border w-full h-24"></textarea>
-          </div>
-          <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-            Create Project
-          </button>
-        </form>
+
+          <h2 class="text-2xl font-bold mb-4">Add Project</h2>
+
+          <form class="flex flex-col">
+
+              <label for="name" class="text-sm font-medium mb-2">Name</label>
+              <input type="text" id="name" name="name" class="mb-4">
+
+              <label for="description" class="text-sm font-medium mb-2">Description</label>
+              <textarea id="description" name="description" class="mb-4"></textarea>
+
+              <button class="add-project bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mt-4">
+                  Add Project
+              </button>
+          </form>
       </div>
+      
     `;
 
-  const projectForm = document.getElementById("project-form");
-  projectForm.addEventListener("submit", createProject);
+    const addProjectButton = document.querySelector(".add-project");
+    addProjectButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      const name = document.getElementById("name").value;
+      const description = document.getElementById("description").value;
+      this.createProject(name, description);
+      this.renderProjects();
+    });
+  }
+
+  createProject(name, description) {
+    const project = new Project(name, description);
+    this.projects.push(project);
+    return project;
+  }
+
+  modifyProject(newName, newDescription) {}
+
+  renderProjects() {
+    SIDEBAR.innerHTML = `
+      <div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
+          <h2 class="text-2xl font-bold mb-4">Projects</h2>
+          <ul class="divide-y divide-gray-200">
+          ${this.projects
+            .map(
+              (project, index) => `
+              <li class="project p-8 rounded h-7 bg-blue-500 flex items-center justify-between text-white cursor-pointer">
+                  <p class="text-sm font-medium">
+                      ${project.name}
+                  </p>
+                  <p class="text-sm">
+                      ${project.description}
+                  </p>
+              </li>
+              `
+            )
+            .join("")}
+          </ul>
+      </div>
+      
+      <button class="add-project bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mt-4">
+        Add Project
+      </button>
+    `;
+
+    const Project = document.querySelector(".project");
+
+    Project.addEventListener("click", () => {
+      this.renderTodos();
+    });
+
+    const addProjectButton = document.querySelector(".add-project");
+    addProjectButton.addEventListener("click", () => {
+      this.renderProjectForm();
+    });
+
+    const projectItems = SIDEBAR.querySelectorAll("li");
+    projectItems.forEach((item, index) => {
+      item.addEventListener("click", () => {
+        this.currentProjectIndex = index;
+        this.renderTodos();
+      });
+    });
+  }
+
+  renderTodos() {
+    TODOS.innerHTML = `<div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
+    <div class="todoListHeader">
+    <h2 class="text-2xl font-bold mb-4">${
+      this.projects[this.currentProjectIndex].name
+    }</h2>
+
+    <button class="add-todo bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mt-4">
+        Add Todo
+    </button>
+    </div>
+  
+
+
+    <ul class="divide-y divide-gray-200">
+    ${this.projects[this.currentProjectIndex].todos
+      .map(
+        (todo, index) => `
+      <li class="project p-8 rounded h-7 bg-blue-500 flex items-center justify-between text-white cursor-pointer">
+          <p class="text-sm font-medium">
+             fdsfs
+          </p>
+          <p class="text-sm">
+              gfsdg
+          </p>
+      </li>
+      `
+      )
+      .join("")}
+    </ul>
+    </div>
+    `;
+  }
 }
 
 function renderTodoForm() {
   TODOS.innerHTML = `
     <div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
-        <h2 class="text-2xl font-bold mb-4">Create a New Todo</h2>
-        <form id="todo-form">
-            <div class="mb-4">
-                <label for="todo-title" class="block text-sm font-medium text-gray-700">Title:</label>
-                <input type="text" id="todo-title" required class="mt-1 p-2 rounded border w-full">
-            </div>
-            <div class="mb-4">
-                <label for="todo-description" class="block text-sm font-medium text-gray-700">Description:</label>
-                <textarea id="todo-description" required class="mt-1 p-2 rounded border w-full h-24"></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="due-date" class="block text-sm font-medium text-gray-700">Due Date:</label>
-                <input type="date" id="due-date" required class="mt-1 p-2 rounded border w-full">
-            </div>
-            <div class="mb-4">
-                <label for="priority" class="block text-sm font-medium text-gray-700">Priority:</label>
-                <select id="priority" required class="mt-1 p-2 rounded border w-full">
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                </select>
-            </div>
-            <div class="mb-4">
-                <label for="notes" class="block text-sm font-medium text-gray-700">Notes:</label>
-                <textarea id="notes" class="mt-1 p-2 rounded border w-full h-24"></textarea>
-            </div>
-            <div class="mb-4">
-                <label for="checklist" class="block text-sm font-medium text-gray-700">Checklist:</label>
-                <textarea id="checklist" class="mt-1 p-2 rounded border w-full h-24"></textarea>
-            </div>
-            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-                Create Todo
+        <h2 class="text-2xl font-bold mb-4">Add Todo</h2>
+
+        <form class="flex flex-col">
+
+            <label for="title" class="text-sm font-medium mb-2">Title</label>
+            <input type="text" id="title" name="title" class="mb-4">
+
+            <label for="description" class="text-sm font-medium mb-2">Description</label>
+            <textarea id="description" name="description" class="mb-4"></textarea>
+
+            <label for="dueDate" class="text-sm font-medium mb-2">Due Date</label>
+            <input type="date" id="dueDate" name="dueDate" class="mb-4">
+
+            <label for="priority" class="text-sm font-medium mb-2">Priority</label>
+            <select id="priority" name="priority" class="mb-4">
+                <option value="1">High</option>
+                <option value="2">Medium</option>
+                <option value="3">Low</option>
+            </select>
+
+            <label for="notes" class="text-sm font-medium mb-2">Notes</label>
+            <textarea id="notes" name="notes" class="mb-4"></textarea>
+
+            <label for="checklist" class="text-sm font-medium mb-2">Checklist</label>
+            <input type="text" id="checklist" name="checklist" class="mb-4">
+            <button class="add-checklist-item bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mt-4">
+                Add Checklist Item
+            </button>
+
+            <button class="add-todo bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mt-4">
+                Add Todo
             </button>
         </form>
     </div>
+    
   `;
-
-  const todoForm = document.getElementById("todo-form");
-  todoForm.addEventListener("submit", createTodo);
 }
 
-function createProject(e) {
-  e.preventDefault();
-  const projectName = document.getElementById("project-name").value;
-  const projectDescription = document.getElementById(
-    "project-description"
-  ).value;
-  const project = new Project(projectName, projectDescription);
-  projects.push(project);
-  renderProjects();
+class TodoManger {
+  constructor() {
+    this.todos = [];
+    this.currentTodoIndex = null;
+  }
 }
 
-function renderProjects() {
-  SIDEBAR.innerHTML = `
-    <div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
-        <h2 class="text-2xl font-bold mb-4">Projects</h2>
-        <ul class="divide-y divide-gray-200">
-        ${projects
-          .map(
-            (project, index) => `
-            <li class="projectpy-4">
-                <div class="flex justify-between">
-                <p class="text-sm font-medium text-gray-900">
-                    ${project.name}
-                </p>
-                <p class="text-sm text-gray-500">
-                    ${project.description}
-                </p>
-                </div>
-            </li>
-            `
-          )
-          .join("")}
-        </ul>
-    </div>
-    `;
+const projectManager = new ProjectManager();
+projectManager.createProject("Project 1", "Description 1");
+projectManager.createProject("Project 2", "Description 2");
+projectManager.renderProjects();
 
-  const projectItems = SIDEBAR.querySelectorAll("li");
-  projectItems.forEach((item, index) => {
-    item.addEventListener("click", () => {
-      renderTodos(index);
-    });
-  });
+ADD_PROJECT_BTN.addEventListener("click", () => {
+  projectManager.renderProjects();
+});
 
-  ADD_PROJECT_BTN.addEventListener("click", renderProjectForm);
-}
-
-function renderTodos(index) {
-  TODOS.innerHTML = `
-    <div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
-        <div class="flex justify-between mb-4">
-        <h2 class="text-2xl font-bold mb-4">Todos</h2>
-        <button class="add-todo bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
-            Add Todo
-        </button>
-        </div>
-        <ul class="divide-y divide-gray-200">
-        ${projects[index].todos
-          .map(
-            (todo, index) => `
-            <li class="projectpy-4">
-                <div class="flex justify-between">
-                <p class="text-sm font-medium text-gray-900">
-                    ${todo.title}
-                </p>
-                <p class="text-sm text-gray-500">
-                    ${todo.description}
-                </p>
-                </div>
-            </li>
-            `
-          )
-          .join("")}
-        </ul>
-    </div>
-    `;
-
-  const ADD_TODO_BTN = document.querySelector(".add-todo");
-  ADD_TODO_BTN.addEventListener("click", renderTodoForm);
-}
+ADD_TODO_BTN.addEventListener("click", () => {
+  projectManager.renderTodoForm();
+});

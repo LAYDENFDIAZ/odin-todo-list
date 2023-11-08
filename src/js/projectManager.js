@@ -1,5 +1,7 @@
 import { Project } from "./project.js";
-import { renderTodos, renderProjectForm } from "./ui.js";
+
+const SIDEBAR = document.querySelector(".projects-container");
+const TODOS = document.querySelector(".todo-container");
 
 export class ProjectManager {
   constructor() {
@@ -95,7 +97,13 @@ export class ProjectManager {
   }
 
   renderTodos() {
-    TODOS.innerHTML = `<div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
+    if (
+      this.currentProjectIndex !== null &&
+      this.projects[this.currentProjectIndex]
+    ) {
+      console.log(this.projects[this.currentProjectIndex]);
+
+      TODOS.innerHTML = `<div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
       <div class="todoListHeader">
       <h2 class="text-2xl font-bold mb-4">${
         this.projects[this.currentProjectIndex].name
@@ -126,5 +134,8 @@ export class ProjectManager {
       </ul>
       </div>
       `;
+    } else {
+      TODOS.innerHTML = "No project selected.";
+    }
   }
 }

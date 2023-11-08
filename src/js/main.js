@@ -1,12 +1,11 @@
 import { ProjectManager } from "./projectManager.js";
-import { renderProjects, renderTodoForm } from "./ui.js";
-import TodoManager from "./todoManager";
+import { TodoManager } from "./todoManager.js";
 
 const projectManager = new ProjectManager();
 projectManager.createProject("Project 1", "Description 1");
 projectManager.createProject("Project 2", "Description 2");
 
-renderProjects(projectManager);
+projectManager.renderProjects();
 
 const todoManager = new TodoManager();
 

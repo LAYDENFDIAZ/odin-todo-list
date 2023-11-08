@@ -1,4 +1,4 @@
-class TodoManager {
+export class TodoManager {
   constructor() {
     this.todos = [];
     this.currentTodoIndex = null;
@@ -45,5 +45,3 @@ class TodoManager {
     `;
   }
 }
-
-export default TodoManager;

@@ -1,3 +1,5 @@
+const TODOS = document.querySelector(".todo-container");
+
 export class TodoManager {
   constructor() {
     this.todos = [];
@@ -44,4 +46,39 @@ export class TodoManager {
       
     `;
   }
+
+  renderTodos(index, project) {
+    if (index !== null && project) {
+      TODOS.innerHTML = `<div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
+      <div class="todoListHeader">
+      <h2 class="text-2xl font-bold mb-4">${project.name}</h2>
+  
+      <button class="add-todo bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded mt-4">
+          Add Todo
+      </button>
+      </div>
+  
+      <ul class="divide-y divide-gray-200">
+      ${project.todos
+        .map(
+          (todo, index) => `
+        <li class="project p-8 rounded h-7 bg-blue-500 flex items-center justify-between text-white cursor-pointer">
+            <p class="text-sm font-medium">
+               ${todo.title} <!-- Use appropriate property from your Todo object -->
+            </p>
+            <p class="text-sm">
+                ${todo.description} <!-- Use appropriate property from your Todo object -->
+            </p>
+        </li>
+        `
+        )
+        .join("")}
+      </ul>
+      </div>`;
+    } else {
+      TODOS.innerHTML = "No project selected.";
+    }
+  }
+
+  renderTodoForm() {}
 }

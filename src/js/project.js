@@ -8,4 +8,6 @@ export class Project {
   addTodo(todo) {
     this.todos.push(todo);
   }
+
+  modifyProject(newName, newDescription) {}
 }

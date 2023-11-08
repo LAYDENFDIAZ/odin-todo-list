@@ -2,15 +2,12 @@ import { ProjectManager } from "./projectManager.js";
 import { TodoManager } from "./todoManager.js";
 
 const projectManager = new ProjectManager();
-projectManager.createProject("Project 1", "Description 1");
+const todoManager = new TodoManager();
+
+projectManager.createProject("Default", "THIS IS THE DEFAULT PROJECT");
 projectManager.createProject("Project 2", "Description 2");
 
 projectManager.renderProjects();
 
-const todoManager = new TodoManager();
-
 const ADD_TODO_BTN = document.querySelector(".add-todo");
-
-ADD_TODO_BTN.addEventListener("click", () => {
-  todoManager.renderTodoForm();
-});
+const SIDEBAR = document.querySelector(".projects-container");

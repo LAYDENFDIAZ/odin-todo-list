@@ -91,16 +91,13 @@ export class ProjectManager {
     projectItems.forEach((item, index) => {
       item.addEventListener("click", () => {
         this.currentProjectIndex = index;
-        this.renderTodos();
+        this.renderTodos(this.currentProjectIndex, this.projects[index]);
       });
     });
   }
 
-  renderTodos() {
-    if (
-      this.currentProjectIndex !== null &&
-      this.projects[this.currentProjectIndex]
-    ) {
+  renderTodos(index, project) {
+    if (index !== null && project) {
       console.log(this.projects[this.currentProjectIndex]);
 
       TODOS.innerHTML = `<div class="w-3/4 mx-auto bg-gray-300 p-4 rounded">
